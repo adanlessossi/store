@@ -22,6 +22,7 @@ import ch.store.api.domain.Category;
 import ch.store.api.domain.CategoryTree;
 
 /**
+ * The category API endpoints.
  * @author: B. Kanli
  *
  */
@@ -31,12 +32,22 @@ public class CategoryResource {
 	@PersistenceContext(unitName = "AdminPU")
 	private EntityManager em;
 
+	/**
+	 * Retrieves all categories from the db store.
+	 * @return a list of categories
+	 * @throws Exception if backend not accessible
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Category> all() throws Exception {
 		return em.createNamedQuery("Category.findAll", Category.class).getResultList();
 	}
 
+	/**
+	 * Creates the category tree.
+	 * @return the tree
+	 * @throws Exception if backend not accessible
+	 */
 	@GET
 	@Path("/tree")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -44,6 +55,12 @@ public class CategoryResource {
 		return em.find(CategoryTree.class, 1);
 	}
 
+	/**
+	 * Creates a new {@link Category}.
+	 * @param category the category to create
+	 * @return the response
+	 * @throws Exception if creation fails
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -70,6 +87,11 @@ public class CategoryResource {
 		return Response.created(new URI("category/" + category.getId().toString())).build();
 	}
 
+	/**
+	 * Finds the category by its id.
+	 * @param categoryId the category id
+	 * @return the category to be found
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{categoryId}")
@@ -77,6 +99,12 @@ public class CategoryResource {
 		return em.find(Category.class, categoryId);
 	}
 
+	/**
+	 * Deletes a category with the given id.
+	 * @param categoryId the category id
+	 * @return the response
+	 * @throws Exception if deletion fails
+	 */
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{categoryId}")
@@ -92,6 +120,13 @@ public class CategoryResource {
 		return Response.noContent().build();
 	}
 
+	/**
+	 * Modifies the category with the given id.
+	 * @param categoryId the category id
+	 * @param category the category
+	 * @return the response
+	 * @throws Exception if update fails
+	 */
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -105,14 +140,12 @@ public class CategoryResource {
 				return Response.status(Response.Status.NOT_FOUND)
 						.entity("Category with id of " + categoryId + " does not exist.").build();
 			}
-
 			Category parent;
 			if ((parent = category.getParent()) != null) {
 				if (parent.getId() != null && parent.getVersion() == null) {
 					category.setParent(get(parent.getId()));
 				}
 			}
-
 			em.merge(category);
 
 			return Response.ok(category).build();

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
+ * A Tree display of the catogories in the Admin Interface.
  * @author: B. Kanli
  *
  */

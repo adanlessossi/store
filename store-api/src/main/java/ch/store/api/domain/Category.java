@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
+ * Represents the categories managed by the Admin Interface.
+ * 
  * @author: B. Kanli
  *
  */
